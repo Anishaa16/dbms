@@ -1,0 +1,114 @@
+***************************************************** CODE-OUTPUT ************************************************
+
+
+
+create table tbl_library(rollin int, name varchar(30), dateofissue date, nameofbook varchar(30), status char(10));
+Table created.
+
+insert into tbl_library values(101, 'sahil', TO_DATE('2017-07-16','yyyy/mm/dd'), 'dbms', 'r');
+1 row(s) inserted.
+
+insert into tbl_library values(102, 'sanket', TO_DATE('2017-07-16','yyyy/mm/dd'), 'cns', 'i');
+1 row(s) inserted.
+
+insert into tbl_library values(103, 'yash', TO_DATE('2017-07-18','yyyy/mm/dd'), 'toc', 'i');
+1 row(s) inserted.
+
+insert into tbl_library values(104, 'omkar',TO_DATE('2017-07-20','yyyy/mm/dd'), 'spos', 'i');
+1 row(s) inserted.
+
+create table tbl_library_audit(rollin int, name char(10), dateofissue date, nameofbook char(10), status char);
+Table created.
+
+
+// CREATING TRIGGER //
+
+create or replace trigger trg_library_af
+    after update or delete on tbl_library for each row
+    declare
+    begin
+
+    	if updating then
+    	insert into tbl_library_audit values (:old.rollin,:old.name,:old.nameofbook,:old.dateofissue,:old.status);
+    	elsif deleting then
+    	insert into tbl_library_audit values (:old.rollin,:old.name,:old.nameofbook,:old.dateofissue,:old.status);
+    	end if;
+    
+    end;
+    /
+
+Trigger created.
+
+
+select * from tbl_library;
+
+ROLLIN	NAME		DATEOFISSUE		NAMEOFBOOK	STATUS
+101		sahil		16-JUL-17		dbms		r         
+102		sanket	16-JUL-17		cns		i         
+103		yash		18-JUL-17		toc		i         
+104		omkar		20-JUL-17		spos		i         
+Download CSV
+4 rows selected.
+
+select * from tbl_library_audit;
+no data found.
+
+
+// FOR UPDATING //
+
+update tbl_library set status = 'r' where tbl_library.rollin = 104;
+1 row(s) affected.
+
+select * from tbl_library;
+
+ROLLIN	NAME		DATEOFISSUE		NAMEOFBOOK	STATUS
+101		sahil		16-JUL-17		dbms		r         
+102		sanket	16-JUL-17		cns		i         
+103		yash		18-JUL-17		toc		i         
+104		omkar		20-JUL-17		spos		r         
+Download CSV
+4 rows selected.
+
+select * from tbl_library_audit;
+
+ROLLIN	NAME		DATEOFISSUE		NAMEOFBOOK	STATUS
+104		omkar		20-JUL-17		spos		r
+Download CSV
+1 row selected.
+
+
+// FOR DELETING //
+
+delete from tbl_library where rollin = 102;
+1 row(s) affected.
+
+select * from tbl_library;
+
+ROLLIN	NAME		DATEOFISSUE		NAMEOFBOOK	STATUS
+101		sahil		16-JUL-17		dbms		r                  
+103		yash		18-JUL-17		toc		i         
+104		omkar		20-JUL-17		spos		r         
+Download CSV
+3 rows selected.
+
+
+select * from tbl_library_audit;
+
+ROLLIN	NAME		DATEOFISSUE		NAMEOFBOOK	STATUS
+104		omkar		20-JUL-17		spos		r
+102		sanket	16-JUL-17		cns		i         
+Download CSV
+2 rows selected.
+
+
+
+
+
+
+
+
+
+
+
+
+

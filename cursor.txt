@@ -1,0 +1,39 @@
+--create table oldt(id number(3), name VARCHAR2(10));
+-- insert into oldt values(1,'sohan');
+-- insert into oldt values(2,'om');
+--select * from oldt;
+
+-- create table newt(id number(3), name VARCHAR2(10));
+-- insert into newt values(3,'shubhs');
+-- insert into newt values(4,'omkar');
+--select * from newt;
+
+-- declare
+-- rollno number;
+-- flag int(2);
+-- cursor c_roll(rollno number) is select * from oldt
+-- where ID not in( select id from newt where newt.ID = oldt.ID);
+-- info newt%rowtype;
+
+-- begin
+-- rollno:=1;
+-- flag:=0;
+-- open c_roll(rollno);
+-- loop fetch c_roll into info;
+-- exit when c_roll%notfound;
+-- if(info.ID = rollno) then
+-- insert into newt values(info.ID, info.Name);
+-- flag:=1;
+-- end if;
+-- end loop;
+
+-- if(c_roll % rowcount=0 or flag=0) then
+-- dbms_output.put_line('this record already exit in new table');
+-- else
+-- dbms_output.put_line('record updated!!');
+-- end if;
+-- close c_roll;
+-- end;
+-- /
+
+--select * from newt;
